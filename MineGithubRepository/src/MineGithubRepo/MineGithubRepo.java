@@ -19,6 +19,8 @@ import java.io.FileNotFoundException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryBuilder;
 
+import com.sun.org.apache.regexp.internal.recompile;
+
 import refdiff.core.RefDiff;
 import refdiff.core.api.GitService;
 import refdiff.core.rm2.model.refactoring.SDRefactoring;
@@ -31,11 +33,33 @@ public class MineGithubRepo {
 
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = null;
-		 
-        
+		 String outputPath=".\\Out.csv";
+		 String localRepoPath="";
+		 String RepoName="saramsh/common-token-subsequences";
+        if(args.length<1)
+        {
+        	System.out.println("Error: Please insert input parameters.");
+        	return;
+        }
 		try {
+			if(args.length==1)
+				localRepoPath=args[0];
+			else
+				if(args.length==2)
+				{
+					outputPath=args[1];
+					localRepoPath=args[0];
+				}
+				else
+				{
+					outputPath=args[1];
+					localRepoPath=args[0];
+					RepoName=args[2];
+				}
+			System.out.println(outputPath);
 			List<String> listOfCommitUrls=new ArrayList<String>();
-			String nextURL="https://github.com/saramsh/common-token-subsequences/commits/master";
+			String nextURL="https://github.com/"+RepoName+"/commits/master";
+			System.out.println(nextURL);
            // URL url = new URL("https://github.com/saramsh/common-token-subsequences/commits/master");
 			System.out.println("Extracting Commits' Sha1...");
 			while(nextURL!="")
@@ -76,13 +100,13 @@ public class MineGithubRepo {
 	           }    
 			}
 			System.out.println("All Commits' Sha1 are Extracted.");
-           PrintWriter pwOut = new PrintWriter(new File("G:\\out.csv"));
+           PrintWriter pwOut = new PrintWriter(new File(outputPath));
 	        StringBuilder sbOut = new StringBuilder();
 	        sbOut.append("Commit SHA, Number of changes that fit the criteria (Change Method Signature)\n");
             RefDiff refDiff = new RefDiff();
      		GitService gitService = (GitService) new GitServiceImpl();
      		//String project = "https://github.com/saramsh/common-token-subsequences";
-     		String project ="https://github.com/saramsh/common-token-subsequences";
+     		String project ="https://github.com/"+RepoName;
      		File folder = new File("G:/tmp5");
      		String projectName = project.split("/")[4];
      		File f = new File(folder, projectName);

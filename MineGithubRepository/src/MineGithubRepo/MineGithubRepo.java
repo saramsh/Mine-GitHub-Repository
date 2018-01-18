@@ -20,6 +20,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryBuilder;
 
 import com.sun.org.apache.regexp.internal.recompile;
+import com.sun.org.apache.xerces.internal.impl.xs.identity.Selector.Matcher;
 
 import refdiff.core.RefDiff;
 import refdiff.core.api.GitService;
@@ -38,23 +39,56 @@ public class MineGithubRepo {
 		 String RepoName="saramsh/common-token-subsequences";
         if(args.length<1)
         {
-        	System.out.println("Error: Please insert input parameters.");
+        	System.out.println("Error: Please insert required input parameters.");
         	return;
         }
 		try {
 			if(args.length==1)
+			{
 				localRepoPath=args[0];
+				if(!localRepoPath.matches("([a-zA-Z]\\:)?(\\\\[a-zA-Z0-9_\\-|\\.]+)+"))
+				{
+					//System.out.println(patternDirectory+"00000"+localRepoPath);
+					System.out.println("Error: Insert first input parameter in correct format. Example: d:\\tmp");
+					return;
+				}
+			}
 			else
 				if(args.length==2)
 				{
 					outputPath=args[1];
 					localRepoPath=args[0];
+					if(!localRepoPath.matches("([a-zA-Z]\\:)?(\\\\[a-zA-Z0-9_\\-|\\.]+)+"))
+					{
+						System.out.println("Error: Insert first input parameter in correct format. Example: d:\\tmp");
+						return;
+					}
+					if(!outputPath.matches("([a-zA-Z]\\:)?(\\\\[a-zA-Z0-9_\\-|\\.]+)+\\.csv"))
+					{
+						System.out.println("Error: Insert Second input parameter in correct format. Example: d:\\Out.csv");
+						return;
+					}
 				}
 				else
 				{
 					outputPath=args[1];
 					localRepoPath=args[0];
 					RepoName=args[2];
+					if(!localRepoPath.matches("([a-zA-Z]\\:)?(\\\\[a-zA-Z0-9_\\-|\\.]+)+"))
+					{
+						System.out.println("Error: Insert first input parameter in correct format. Example: d:\\tmp");
+						return;
+					}
+					if(!outputPath.matches("([a-zA-Z]\\:)?(\\\\[a-zA-Z0-9_\\-|\\.]+)+\\.csv"))
+					{
+						System.out.println("Error: Insert Second input parameter in correct format. Example: d:\\Out.csv");
+						return;
+					}
+					if(!RepoName.matches("[a-zA-Z0-9_-|\\.]+/[a-zA-Z0-9_\\-|\\.]+"))
+					{
+						System.out.println("Error: Insert Third input parameter in correct format. Example: saramsh/common-token-subsequences");
+						return;
+					}
 				}
 			System.out.println(outputPath);
 			List<String> listOfCommitUrls=new ArrayList<String>();
